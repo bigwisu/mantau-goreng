@@ -1,0 +1,18 @@
+# Data Analytics Skills - Python Dependencies
+# Required packages for all 39 Python scripts across 6 data analytics skills
+#
+# Installation:
+#   python3 -m venv venv
+#   source venv/bin/activate  # On Windows: venv\Scripts\activate
+#   pip install -r requirements.txt
+#
+# Or install individually:
+#   pip install pandas numpy
+
+# Core data analysis libraries
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Note: All other dependencies are Python standard library modules:
+# - argparse, csv, json, sys, re, math, datetime, pathlib
+# - collections, statistics, io, tempfile, os
