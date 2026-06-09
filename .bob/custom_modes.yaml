@@ -68,14 +68,14 @@ customModes:
       - When stuck: Misalignment? → Playback. Unclear? → Revisit Hills. Too many ideas? → Prioritization Grid
       
       DELIVERABLE FORMAT:
-      - **Default directory:** Save all markdown deliverables in `docs/design-thinking/` directory
+      - **Default directory:** Save all markdown deliverables in `design-thinking/` directory
       - **Create directories on-demand:** Only create the directory structure when first activity is invoked
       - **Subdirectories by activity type:** `research/`, `planning/`, `ideation/`, `testing/`, `alignment/`
       - **File naming:** Use descriptive names with dates: `YYYY-MM-DD_Activity_Name.md` (e.g., `2026-06-09_Empathy_Map.md`)
-      - **Directory creation:** Use `mkdir -p docs/design-thinking/{subdirectory}` before creating files
+      - **Directory creation:** Use `mkdir -p design-thinking/{subdirectory}` before creating files
       - **Default behavior:** Create comprehensive markdown documents for all deliverables (guides, plans, maps, etc.)
       - **Completion messages:** Keep brief and conversational - simply mention task completion and file location
-      - **Example:** "✅ Created Empathy Map at docs/design-thinking/research/2026-06-09_Empathy_Map.md"
+      - **Example:** "✅ Created Empathy Map at design-thinking/research/2026-06-09_Empathy_Map.md"
       - **Avoid:** Long summaries in chat - put all details in the markdown document
       
       REFERENCES:
@@ -131,7 +131,7 @@ customModes:
       - code
       - plan
     customInstructions: >-
-      PYTHON ENVIRONMENT CHECK:
+      PYTHON ENVIRONMENT SETUP:
       
       **On mode activation, check Python package availability:**
       
@@ -140,23 +140,27 @@ customModes:
       python3 -c "import pandas; import numpy; print('✅ All packages ready')" 2>/dev/null || echo "⚠️  Missing packages"
       ```
       
-      **If packages are missing:**
+      **If packages are missing, offer installation:**
       - Inform user: "⚠️  Python packages required: pandas, numpy"
-      - Suggest installation:
-        ```bash
-        # Option 1: Install in virtual environment (recommended)
-        python3 -m venv venv
-        source venv/bin/activate  # On Windows: venv\Scripts\activate
-        pip install -r .bob/skills/requirements.txt
-        
-        # Option 2: Install globally
-        pip install pandas numpy
-        ```
-      - After installation, confirm: "Run the check command again to verify"
+      - Ask: "Would you like me to set up the Python environment?"
+      - If yes:
+        1. Copy requirements.txt to project root: `cp .bob/skills/requirements.txt ./requirements.txt`
+        2. Create virtual environment: `python3 -m venv venv`
+        3. Activate and install: `source venv/bin/activate && pip install -r requirements.txt`
+        4. Confirm: "✅ Python environment ready. Virtual environment created at ./venv/"
       
       **If packages are ready:**
       - Confirm: "✅ Python environment ready (pandas, numpy installed)"
       - Proceed with analytics tasks
+      
+      **Jupyter Notebook Setup (Optional):**
+      - Ask user: "Would you like to set up Jupyter Notebook for interactive analysis?"
+      - If yes:
+        1. Install Jupyter: `pip install jupyter notebook ipykernel`
+        2. Create notebooks directory: `mkdir -p notebooks`
+        3. Create starter notebook: `notebooks/analysis_starter.ipynb`
+        4. Launch: `jupyter notebook notebooks/`
+        5. Inform: "✅ Jupyter Notebook ready at http://localhost:8888"
       
       ---
       
@@ -260,34 +264,76 @@ customModes:
       
       ---
       
-      DATA STORAGE & ACCESS:
+      DIRECTORY STRUCTURE:
+      
+      **Project Organization:**
+      ```
+      project/
+      ├── data/              # Data files (raw, processed, exports)
+      ├── scripts/           # Generated Python scripts
+      ├── notebooks/         # Jupyter notebooks
+      ├── data-analysis/     # Analysis outputs (visualizations, reports, summaries)
+      ├── design-thinking/   # Design thinking deliverables
+      └── docs/              # Other documentation
+      ```
+      
+      **Directory Creation:**
+      - Create directories on-demand when first needed
+      - Use: `mkdir -p data/{raw,processed,exports}`
+      - Use: `mkdir -p scripts notebooks data-analysis design-thinking`
       
       **File-based Data Sources:**
-      - **Default location:** Store all data files in `data/` directory
-      - **Create on-demand:** Use `mkdir -p data` before saving files
+      - **Default location:** `data/` directory
       - **Supported formats:** CSV, Excel (.xlsx), Parquet, JSON
-      - **Organization:** Create subdirectories as needed: `data/raw/`, `data/processed/`, `data/exports/`
-      - **Gitignore:** Data files are excluded from version control (see .gitignore)
-      - **Example:** `data/raw/customer_data.csv`, `data/processed/cohort_analysis.parquet`
+      - **Organization:**
+        - `data/raw/` - Original, unmodified data files
+        - `data/processed/` - Cleaned, transformed data
+        - `data/exports/` - Query results, analysis outputs
+      - **Gitignore:** Data files excluded from version control
+      - **Example:** `data/raw/customer_data.csv`
       
       **Database Connections:**
-      - **Direct connection:** For live data, use database connection strings
+      - **Direct connection:** Use database connection strings for live data
       - **Connection patterns:**
         - PostgreSQL: `postgresql://user:password@host:port/database`
         - MySQL: `mysql://user:password@host:port/database`
         - SQLite: `sqlite:///path/to/database.db`
-      - **Security:** Never commit connection strings with credentials
-      - **Best practice:** Use environment variables or config files (excluded from git)
+      - **Security:** Never commit credentials - use .env file (excluded from git)
+      - **Best practice:** Store connection strings in `.env`, load with python-dotenv
+      
+      **Analysis Output Locations:**
+      
+      1. **Generated Scripts** → `scripts/`
+         - Custom Python scripts created during analysis
+         - Naming: `YYYY-MM-DD_descriptive_name.py`
+         - Example: `scripts/2026-06-09_cohort_retention.py`
+      
+      2. **Jupyter Notebooks** → `notebooks/`
+         - Interactive analysis notebooks
+         - Naming: `YYYY-MM-DD_analysis_name.ipynb`
+         - Example: `notebooks/2026-06-09_customer_segmentation.ipynb`
+      
+      3. **Data Analysis Outputs** → `data-analysis/`
+         - Visualizations: Charts, graphs, plots (PNG, SVG, HTML)
+         - Reports: Executive summaries, analysis documentation (MD)
+         - Summaries: Key findings and insights
+         - Naming: `YYYY-MM-DD_output_name.{png|svg|html|md}`
+         - Examples:
+           - `data-analysis/2026-06-09_retention_curve.png`
+           - `data-analysis/2026-06-09_executive_summary.md`
+           - `data-analysis/2026-06-09_insights.md`
       
       **Data Access Workflow:**
-      1. **Ask user:** "Do you have data files or need to connect to a database?"
-      2. **If files:** Suggest storing in `data/` directory, create if needed
-      3. **If database:** Request connection details, use appropriate Python library (pandas, sqlalchemy)
-      4. **For exports:** Save results to `data/exports/` with descriptive names and timestamps
+      1. Ask user: "Do you have data files or need to connect to a database?"
+      2. If files: Create `data/raw/` and suggest storing files there
+      3. If database: Request connection details, suggest storing in `.env`
+      4. For exports: Save to `data/exports/` with timestamps
       
-      **Python Script Data Handling:**
-      - Scripts accept `--input` flag for file paths: `python script.py --input data/raw/file.csv`
-      - Scripts can read from stdin for database queries
+      **Python Script Execution:**
+      - Existing skill scripts: `.bob/skills/{category}/{sub-skill}/scripts/*.py`
+      - Generated scripts: `scripts/*.py`
+      - Usage: `python scripts/script_name.py --input data/raw/file.csv`
+      - Output: Can save to `data/exports/` or `data-analysis/`
       - Output defaults to stdout, use `--output` to save: `python script.py --output data/exports/result.csv`
       
       ---

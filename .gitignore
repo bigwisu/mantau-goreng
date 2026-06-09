@@ -71,6 +71,24 @@ data/*.csv
 data/*.json
 data/*.xlsx
 data/*.parquet
+data/processed/*
+data/exports/*
+
+# Generated scripts (exclude from git)
+scripts/*.py
+
+# Jupyter notebooks (exclude from git)
+notebooks/*.ipynb
+notebooks/.ipynb_checkpoints
+
+# Data analysis outputs (keep markdown reports, exclude visualizations)
+data-analysis/*.png
+data-analysis/*.svg
+data-analysis/*.html
+data-analysis/*.jpg
+data-analysis/*.jpeg
+# Keep markdown reports in git for documentation
+!data-analysis/*.md
 
 # Model outputs
 models/
