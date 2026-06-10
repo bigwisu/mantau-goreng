@@ -63,16 +63,16 @@ htmlcov/
 .DS_Store
 
 # Data files (keep structure, ignore content)
-data/raw/*.bib
-data/raw/*.csv
-data/raw/*.pdf
-data/raw/papers/*.pdf
-data/*.csv
-data/*.json
-data/*.xlsx
-data/*.parquet
-data/processed/*
-data/exports/*
+# data/raw/*.bib
+# data/raw/*.csv
+# data/raw/*.pdf
+# data/raw/papers/*.pdf
+# data/*.csv
+# data/*.json
+# data/*.xlsx
+# data/*.parquet
+# data/processed/*
+# data/exports/*
 
 # Generated scripts (exclude from git)
 scripts/*.py
